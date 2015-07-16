@@ -64,12 +64,13 @@
             @if (Model.Parameters.Any()) {
                 foreach (var parameter in Model.Parameters) {
                     <tr class="calculatorParameterHolder">
-                        <td><button class="btn btn-block calculatorButton" data-input="@parameter.Name">@parameter.Name</button></td>
+                        <td><button class="btn btn-block calculatorButton" data-input="@parameter.Name">Add</button></td>
                         <td><input class="calculatorParameter calculatorParameterName" value="@parameter.Name" type="text" /></td>
                         <td><input class="calculatorParameter calculatorParameterEquation" value="@parameter.Equation" type="text" /></td>
                     </tr>
 }
             }
+            <tr><td colspan="2"><button class="btn btn-block addParamButton">Add new parameter</button></td></tr>
         </table>
     </div>
 </div>
