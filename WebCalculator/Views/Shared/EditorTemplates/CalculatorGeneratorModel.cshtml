@@ -1,0 +1,75 @@
+﻿@model WebCalculator.Models.CalculatorGeneratorModel
+
+@using WebCalculator.Helpers;
+
+<div class="calculator">
+    <div class="row">
+        <table>
+            <tr>
+                <td colspan="4"><input class="calculatorInput" type="text" value="@Model.Input" disabled /></td>
+            </tr>
+            <tr>
+                <td colspan="4"><input class="calculatorResult" type="text" disabled /></td>
+                <td><img src="~/Content/Images/loading.gif" class="calculatorLoading" hidden /></td>
+            </tr>
+            <tr>
+                <td><button class="btn btn-block calculatorButton" data-operation="del">&larr;</button></td>
+                <td><button class="btn btn-block calculatorButton" data-operation="CE">CE</button></td>
+            </tr>
+            <tr>
+                <td><button class="btn btn-block calculatorButton" data-input="7">7</button></td>
+                <td><button class="btn btn-block calculatorButton" data-input="8">8</button></td>
+                <td><button class="btn btn-block calculatorButton" data-input="9">9</button></td>
+                <td><button class="btn btn-block calculatorButton" data-input="(">(</button></td>
+            </tr>
+            <tr>
+                <td><button class="btn btn-block calculatorButton" data-input="4">4</button></td>
+                <td><button class="btn btn-block calculatorButton" data-input="5">5</button></td>
+                <td><button class="btn btn-block calculatorButton" data-input="6">6</button></td>
+                <td><button class="btn btn-block calculatorButton" data-input=")">)</button></td>
+            </tr>
+            <tr>
+                <td><button class="btn btn-block calculatorButton" data-input="1">1</button></td>
+                <td><button class="btn btn-block calculatorButton" data-input="2">2</button></td>
+                <td><button class="btn btn-block calculatorButton" data-input="3">3</button></td>
+            </tr>
+            <tr>
+                <td colspan="2"><button class="btn btn-block calculatorButton" data-input="0">0</button></td>
+                <td><button class="btn btn-block calculatorButton" data-input=".">,</button></td>
+                <td><button class="btn btn-block calculatorButton" data-operation="equals">=</button></td>
+            </tr>
+
+            <tr><td colspan="4" class="operatorSeparator"></td></tr>
+
+            @if (Model.Operators.Any()) {
+                foreach (var operatorPage in Model.Operators.Page(3)) {
+                    <tr>
+                        @foreach (var op in operatorPage) {
+                            <td><button class="btn btn-block calculatorButton" title="@op.Name - @op.Description" data-input="@op.Code">@op.UICode</button></td>
+}
+                    </tr>
+}
+            } else {
+                <tr><td><div class="noOperatorsMessage">No operators defined</div></td></tr>}
+        </table>
+    </div>
+
+    <div class="row">
+        <table class="parameterTable">
+            <tr>
+                <th></th>
+                <th>Parameter name</th>
+                <th>Parameter value</th>
+            </tr>
+            @if (Model.Parameters.Any()) {
+                foreach (var parameter in Model.Parameters) {
+                    <tr class="calculatorParameterHolder">
+                        <td><button class="btn btn-block calculatorButton" data-input="@parameter.Name">@parameter.Name</button></td>
+                        <td><input class="calculatorParameter calculatorParameterName" value="@parameter.Name" type="text" /></td>
+                        <td><input class="calculatorParameter calculatorParameterEquation" value="@parameter.Equation" type="text" /></td>
+                    </tr>
+}
+            }
+        </table>
+    </div>
+</div>

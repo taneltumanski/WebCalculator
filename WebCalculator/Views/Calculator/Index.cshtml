@@ -1,0 +1,15 @@
+﻿@model WebCalculator.Models.CalculatorGeneratorModel
+
+@{
+    ViewBag.Title = "Calculator";
+}
+
+<div class="row">
+    <div class="col-lg-1 col-centered">
+        @Html.EditorForModel()
+    </div>
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/calculator")
+}
