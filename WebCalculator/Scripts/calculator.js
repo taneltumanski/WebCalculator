@@ -28,26 +28,15 @@
                 if (input === ".") {
                     newValue = currentValue + ".";
                 } else {
-                    var isDecimalNum = false;
-                    var i = currentValue.length - 1;
-
-                    if (["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"].indexOf(input) !== -1) {
-                        while (i >= 0) {
-                            if (currentValue.charAt(i) === " ") {
-                                break;
-                            } else if (currentValue.charAt(i) === ".") {
-                                isDecimalNum = true;
-                                break;
-                            }
-
-                            i--;
-                        }
-                    }
-
-                    if (isDecimalNum) {
-                        newValue = currentValue + input;
-                    } else {
+                    var numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+                    if (numbers.indexOf(input) === -1) {
                         newValue = currentValue + " " + input;
+                    } else {
+                        if (numbers.indexOf(currentValue.charAt(currentValue.length - 1)) === -1) {
+                            newValue = currentValue + " " + input;
+                        } else {
+                            newValue = currentValue + input;
+                        }
                     } 
                 }
             }
@@ -60,12 +49,12 @@
 });
 
 function CalculateResult(calculator) {
-    var currentValue = calculator.find(".calculatorInput").attr("value");
+    var currentValue = calculator.find(".calculatorInput").val();
     var urlAddition = "Input=" + currentValue;
 
     $(calculator.find(".calculatorParameterHolder")).each(function (i, item) {
-        urlAddition += "&Parameters[" + i + "].Key=" + $(item).find(".calculatorParameterName").attr("value");
-        urlAddition += "&Parameters[" + i + "].Value=" + $(item).find(".calculatorParameterEquation").attr("value");
+        urlAddition += "&Parameters[" + i + "].Key=" + $(item).find(".calculatorParameterName").val();
+        urlAddition += "&Parameters[" + i + "].Value=" + $(item).find(".calculatorParameterEquation").val();
     });
 
     urlAddition = urlAddition.replace("+", "%2B");
