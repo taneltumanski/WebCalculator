@@ -11,6 +11,7 @@ namespace WebCalculator.App_Start
 	using Ninject;
 	using Ninject.Web.Common;
 	using WebCalculator.Calculator;
+	using WebCalculator.Helpers;
 
 	public static class NinjectWebCommon 
     {
@@ -63,6 +64,7 @@ namespace WebCalculator.App_Start
         private static void RegisterServices(IKernel kernel)
         {
 			kernel.Bind<IEquationSolver>().To<OperatorLoadingEquationSolver>().InRequestScope();
-        }        
+			kernel.Bind<IOperatorTypeLoader>().To<OperatorTypeLoader>().InRequestScope();
+		}        
     }
 }

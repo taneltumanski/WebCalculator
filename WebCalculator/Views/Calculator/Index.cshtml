@@ -10,6 +10,111 @@
     </div>
 </div>
 
+<div class="row">
+    @Html.Partial("_newOperatorUpload")
+</div>
+
 @section scripts {
     @Scripts.Render("~/bundles/calculator")
+
+    <script type="text/javascript">
+        var fileData = null;
+
+        $(document).ready(function () {
+            $("#operatorUploadProgressbar").progressbar({
+                value: false,
+                change: function () {
+                    $("#operatorUploadProgresslabel").text("Upload Progress: " + $(this).progressbar("value") + "%");
+                },
+                complete: function () {
+                    $("#operatorUploadProgresslabel").text("Upload complete!");
+                }
+            });
+
+            $('#operatorUploadButton').click(uploadFile);
+            $('#txtUploadFile').on('change', fileUploadChanged);
+        });
+
+        function fileProgressHandler(e) {
+            $("#operatorUploadProgressbar").progressbar("option", "max", e.total);
+            $("#operatorUploadProgressbar").progressbar("option", "value", e.loaded);
+        }
+
+        function fileUploadChanged(e) {
+            var files = e.target.files;
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    fileData = new FormData();
+                    for (var x = 0; x < files.length; x++) {
+                        fileData.append("file" + x, files[x]);
+                    }
+                } else {
+                    alert("This browser doesn't support HTML5 file uploads!");
+                }
+            }
+        }
+
+        function uploadFile(e) {
+            if (fileData !== null) {
+                $.ajax({
+                    type: "POST",
+                    url: '/Calculator/UploadNewOperator',
+                    contentType: false,
+                    processData: false,
+                    data: fileData,
+                    xhr: function () {  // Custom XMLHttpRequest
+                        var myXhr = $.ajaxSettings.xhr();
+                        if (myXhr.upload) { // Check if upload property exists
+                            myXhr.upload.addEventListener('progress', fileProgressHandler, false); // For handling the progress of the upload
+                        }
+                        return myXhr;
+                    },
+                    beforeSend: function () {
+                        $("operatorUploadButton").prop('disabled', true);
+                    },
+                    success: function (result) {
+                        AddNewOperators(result);
+                    },
+                    complete: function () {
+                        $("operatorUploadButton").prop('disabled', false);
+                        $("operatorUploadProgressbar").progressbar("value", false)
+                    },
+                    error: function (xhr, status, p3, p4) {
+                        var err = "Error " + " " + status + " " + p3 + " " + p4;
+                        if (xhr.responseText && xhr.responseText[0] == "{") {
+                            err = JSON.parse(xhr.responseText).Message;
+                        }
+                        console.log(err);
+                    }
+                });
+            }
+        }
+
+        function AddNewOperators(operators) {
+            var operatorPages = operators.Operators;
+
+            for (var i = 0; i < operatorPages.length; i++) {
+                var tr = $("<tr>");
+
+                for (var j = 0; j < operatorPages[i].length; j++) {
+                    var operator = operatorPages[i][j];
+
+                    var td = $("<td>");
+                    var button = $("<button>");
+                    button.addClass("btn btn-block calculatorButton");
+                    button.attr("title", operator.Name + " - " + operator.Description);
+                    button.attr("data-input", operator.Code);
+                    button.text(operator.UICode);
+
+                    td.append(button);
+
+                    tr.append(td);
+                }
+
+                tr.insertAfter($(".calculatorInputTable").find("tr").last());
+            }
+
+            BindCalculatorEvents();
+        }
+    </script>
 }

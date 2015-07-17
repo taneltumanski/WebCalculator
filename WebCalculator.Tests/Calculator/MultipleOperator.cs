@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebCalculator.Calculator;
+using WebCalculator.OperatorPlugin;
 
 namespace WebCalculator.Tests.Calculator
 {

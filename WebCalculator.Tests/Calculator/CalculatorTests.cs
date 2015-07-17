@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebCalculator.Calculator;
 using WebCalculator;
+using WebCalculator.OperatorPlugin;
 
 namespace WebCalculator.Tests.Calculator
 {

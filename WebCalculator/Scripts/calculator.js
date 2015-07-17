@@ -1,70 +1,80 @@
-﻿$(".calculator").each(function () {
-    var calculator = $(this);
-    var calculatorInput = calculator.find(".calculatorInput");
+﻿$(document).ready(function () {
+    BindCalculatorEvents();
+});
 
-    calculator.find(".calculatorButton").each(function () {
-        var button = $(this);
+function BindCalculatorEvents() {
+    $(".calculator").each(function () {
+        var calculator = $(this);
+        var calculatorInput = calculator.find(".calculatorInput");
 
-        button.click(function () {
-            ButtonClick(button, calculatorInput, calculator);
-        });
-    });
+        calculator.find(".calculatorButton").each(function () {
+            var button = $(this);
 
-    var paramTables = calculator.find(".parameterTable");
-
-    paramTables.each(function () {
-        var paramTable = $(this);
-
-        paramTable.find(".calculatorParameterHolder").each(function () {
-            var holder = $(this);
-
-            holder.find(".calculatorParameterName").bind("input", function () {
-                holder.find(".calculatorButton").attr("data-input", holder.find(".calculatorParameterName").val());
-                holder.find(".calculatorButton").text(holder.find(".calculatorParameterName").val());
-            });
-        });
-
-        paramTable.find(".addParamButton").click(function () {
-            var addButton = $(this);
-
-            var tr = $("<tr>");
-            tr.addClass("calculatorParameterHolder")
-
-            var td1 = $("<td>");
-            var td2 = $("<td>");
-            var td3 = $("<td>");
-
-            var button = $("<button>");
-            button.addClass("btn btn-block calculatorButton");
-            button.text("Add");
+            button.unbind("click");
             button.click(function () {
                 ButtonClick(button, calculatorInput, calculator);
             });
+        });
 
-            var inputName = $("<input>");
-            inputName.addClass("calculatorParameter calculatorParameterName");
-            inputName.attr("type", "text");
+        var paramTables = calculator.find(".parameterTable");
 
-            var inputEquation = $("<input>");
-            inputEquation.addClass("calculatorParameter calculatorParameterEquation");
-            inputEquation.attr("type", "text");
+        paramTables.each(function () {
+            var paramTable = $(this);
 
-            tr.append(td1);
-            tr.append(td2);
-            tr.append(td3);
+            paramTable.find(".calculatorParameterHolder").each(function () {
+                var holder = $(this);
 
-            td1.append(button);
-            td2.append(inputName);
-            td3.append(inputEquation);
+                holder.find(".calculatorParameterName").unbind("input");
+                holder.find(".calculatorParameterName").bind("input", function () {
+                    holder.find(".calculatorButton").attr("data-input", holder.find(".calculatorParameterName").val());
+                    holder.find(".calculatorButton").text(holder.find(".calculatorParameterName").val());
+                });
+            });
 
-            tr.insertBefore(addButton.parent().parent());
+            paramTable.find(".addParamButton").click(function () {
+                var addButton = $(this);
 
-            tr.bind("input", function () {
-                tr.find(".calculatorButton").attr("data-input", tr.find(".calculatorParameterName").val());
+                var tr = $("<tr>");
+                tr.addClass("calculatorParameterHolder")
+
+                var td1 = $("<td>");
+                var td2 = $("<td>");
+                var td3 = $("<td>");
+
+                var button = $("<button>");
+                button.addClass("btn btn-block calculatorButton");
+                button.text("Add");
+                button.unbind("click");
+                button.click(function () {
+                    ButtonClick(button, calculatorInput, calculator);
+                });
+
+                var inputName = $("<input>");
+                inputName.addClass("calculatorParameter calculatorParameterName");
+                inputName.attr("type", "text");
+
+                var inputEquation = $("<input>");
+                inputEquation.addClass("calculatorParameter calculatorParameterEquation");
+                inputEquation.attr("type", "text");
+
+                tr.append(td1);
+                tr.append(td2);
+                tr.append(td3);
+
+                td1.append(button);
+                td2.append(inputName);
+                td3.append(inputEquation);
+
+                tr.insertBefore(addButton.parent().parent());
+
+                tr.unbind("input");
+                tr.bind("input", function () {
+                    tr.find(".calculatorButton").attr("data-input", tr.find(".calculatorParameterName").val());
+                });
             });
         });
     });
-});
+}
 
 function ButtonClick(button, calculatorInput, calculator) {
     var operation = button.attr("data-operation");

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebCalculator.Calculator;
 using System.Collections.Immutable;
+using WebCalculator.OperatorPlugin;
 
 namespace WebCalculator.Helpers
 {

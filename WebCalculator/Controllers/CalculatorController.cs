@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using WebCalculator.Calculator;
 using WebCalculator.Helpers;
 using WebCalculator.Models;
+using WebCalculator.OperatorPlugin;
 
 namespace WebCalculator.Controllers
 {
@@ -42,24 +43,32 @@ namespace WebCalculator.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult UploadNewOperator(HttpPostedFileBase file)
-		{
-			if (file.ContentLength > 0) {
-				byte[] assemblyData = null;
+		public ActionResult UploadNewOperator()
+		{ 
+			var operators = new List<IOperator>();
 
-				using (var ms = new MemoryStream()) {
-					file.InputStream.CopyTo(ms);
+			foreach (var fileKey in this.Request.Files.AllKeys) {
+				var file = this.Request.Files.Get(fileKey);
 
-					assemblyData = ms.ToArray();
+				if (file.ContentLength > 0) {
+					byte[] assemblyData = null;
+
+					using (var ms = new MemoryStream()) {
+						file.InputStream.CopyTo(ms);
+
+						assemblyData = ms.ToArray();
+					}
+
+					// TODO - this is probably unsafe - should move the loading to a separate AppDomain
+					// TODO - check for duplicate operators
+					var newAssembly = Assembly.Load(assemblyData);
+					var newOperators = this.OperatorTypeLoader.LoadOperators(newAssembly);
+
+					operators.AddRange(newOperators);
 				}
-
-				var newAssembly = Assembly.Load(assemblyData);
-				var newOperators = this.OperatorTypeLoader.LoadOperators(newAssembly);
-
-				return Json(new { Operators = newOperators });
 			}
 
-			return Json(new { Error = "Could not upload file" });
+			return Json(new { Operators = operators.Page(3) });
 		}
 
 		public JsonResult Calculate(CalculatorInput model)

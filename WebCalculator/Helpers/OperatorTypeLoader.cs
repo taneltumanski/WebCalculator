@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using WebCalculator.Calculator;
+using WebCalculator.OperatorPlugin;
+using MoreLinq;
 
 namespace WebCalculator.Helpers
 {
@@ -12,12 +14,12 @@ namespace WebCalculator.Helpers
 	{
 		public virtual IEnumerable<IOperator> LoadOperators()
 		{
-			return LoadOperatorTypes().Select(LoadOperator);
+			return LoadOperatorTypes().Select(LoadOperator).DistinctBy(x => x.Code);
 		}
 
 		public virtual IEnumerable<IOperator> LoadOperators(Assembly ass)
 		{
-			return LoadOperatorTypes(ass).Select(LoadOperator);
+			return LoadOperatorTypes(ass).Select(LoadOperator).DistinctBy(x => x.Code);
 		}
 
 		public IOperator LoadOperator(Type type)

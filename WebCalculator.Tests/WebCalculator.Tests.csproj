@@ -98,6 +98,10 @@
       <Project>{9118d8d0-32e8-40e0-80f3-3ef063440d62}</Project>
       <Name>WebCalculator.Calculator</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WebCalculator.OperatorPlugin\WebCalculator.OperatorPlugin.csproj">
+      <Project>{a2f5e5b7-7e00-4f5b-b672-697b81f22325}</Project>
+      <Name>WebCalculator.OperatorPlugin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebCalculator\WebCalculator.csproj">
       <Project>{1691AFBF-FF6B-4DE8-AA93-7EB8C46C0C1A}</Project>
       <Name>WebCalculator</Name>

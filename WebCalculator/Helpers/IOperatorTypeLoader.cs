@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using WebCalculator.Calculator;
+using WebCalculator.OperatorPlugin;
 
 namespace WebCalculator.Helpers
 {
@@ -14,7 +15,5 @@ namespace WebCalculator.Helpers
 		bool IsOperatorType(Type type);
 		IEnumerable<Type> LoadOperatorTypes();
 		IEnumerable<Type> LoadOperatorTypes(Assembly ass);
-
-		
 	}
 }
