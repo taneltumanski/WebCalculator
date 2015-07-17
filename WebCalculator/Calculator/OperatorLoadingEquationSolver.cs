@@ -13,7 +13,7 @@ namespace WebCalculator.Calculator
 
 		public OperatorLoadingEquationSolver()
 		{
-			var types = new OperatorTypeLoader().LoadOperators();
+			var types = new OperatorTypeLoader().LoadOperatorTypes();
 
             DefaultSolver = new EquationSolver(types);
         }

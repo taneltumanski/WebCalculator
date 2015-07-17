@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using WebCalculator.Calculator;
@@ -12,10 +15,12 @@ namespace WebCalculator.Controllers
 	public class CalculatorController : Controller
 	{
 		private readonly IEquationSolver Solver;
+		private readonly IOperatorTypeLoader OperatorTypeLoader;
 
-		public CalculatorController(IEquationSolver solver)
+		public CalculatorController(IEquationSolver solver, IOperatorTypeLoader typeLoader)
 		{
 			this.Solver = solver;
+			this.OperatorTypeLoader = typeLoader;
 		}
 
 		public ActionResult Index(string input = null, IEnumerable<CalculatorParameter> parameters = null)
@@ -27,20 +32,34 @@ namespace WebCalculator.Controllers
 
 		private CalculatorGeneratorModel GenerateModel(string input = null, IEnumerable<CalculatorParameter> parameters = null)
 		{
-			var operatorTypes = new OperatorTypeLoader().LoadOperators();
-			var operatorFactory = new OperatorFactory(operatorTypes);
+			var operators = this.OperatorTypeLoader.LoadOperators();
 
 			return new CalculatorGeneratorModel() {
 				Input = input ?? "",
-				Operators = operatorFactory.Operators,
-				Parameters = parameters ?? new List<CalculatorParameter>() {  new CalculatorParameter() {  Name = "a", Equation = "20" } }
+				Operators = operators,
+				Parameters = parameters ?? new List<CalculatorParameter>()
 			};
 		}
 
 		[HttpPost]
-		public ActionResult UploadNewOperator()
+		public ActionResult UploadNewOperator(HttpPostedFileBase file)
 		{
-			throw new NotImplementedException();
+			if (file.ContentLength > 0) {
+				byte[] assemblyData = null;
+
+				using (var ms = new MemoryStream()) {
+					file.InputStream.CopyTo(ms);
+
+					assemblyData = ms.ToArray();
+				}
+
+				var newAssembly = Assembly.Load(assemblyData);
+				var newOperators = this.OperatorTypeLoader.LoadOperators(newAssembly);
+
+				return Json(new { Operators = newOperators });
+			}
+
+			return Json(new { Error = "Could not upload file" });
 		}
 
 		public JsonResult Calculate(CalculatorInput model)
