@@ -22,7 +22,7 @@ namespace WebCalculator.Tests.Calculator
 		{
 			get
 			{
-				throw new NotImplementedException();
+				return "Multiple sum";
 			}
 		}
 
@@ -54,7 +54,7 @@ namespace WebCalculator.Tests.Calculator
 		{
 			get
 			{
-				throw new NotImplementedException();
+				return "Multiple";
 			}
 		}
 
@@ -78,7 +78,7 @@ namespace WebCalculator.Tests.Calculator
 		{
 			get
 			{
-				throw new NotImplementedException();
+				return "Multiple";
 			}
 		}
 
@@ -110,7 +110,7 @@ namespace WebCalculator.Tests.Calculator
 		{
 			get
 			{
-				throw new NotImplementedException();
+				return "**";
 			}
 		}
 
